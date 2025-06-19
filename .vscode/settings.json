@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Action_Adventure.sln"
+    "dotnet.defaultSolution": "Chungkang_Project.sln"
 }
