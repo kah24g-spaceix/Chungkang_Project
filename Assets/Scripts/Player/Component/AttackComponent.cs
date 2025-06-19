@@ -8,7 +8,7 @@ public class AttackComponent : MonoBehaviour
     {
         _attackStrategy = GetComponent<IAttackStrategy>();
         if (_attackStrategy == null)
-            Debug.LogError("공격 전략이 설정되어 있지 않음.");
+            Debug.LogError("공격 전략 없음.");
     }
 
     public void DoAttack()

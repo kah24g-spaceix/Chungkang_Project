@@ -3,7 +3,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Vector3 offset = new Vector3(-5f, 8f, -5f);
-    public float followSpeed = 5f;
+    public float followSpeed = 10f;
 
     void LateUpdate()
     {

@@ -2,7 +2,6 @@ using System;
 
 public static class EventBus
 {
-    public static Action<float> OnMoveInputChanged;
     public static Action OnStateChanged;
     public static Action OnRoll;
 

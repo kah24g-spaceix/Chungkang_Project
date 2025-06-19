@@ -1,23 +1,14 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerStateMachine))]
 public class InputComponent : MonoBehaviour
 {
-    private void Update()
-    {
-        Move();
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            EventBus.OnRoll?.Invoke();
-        }
-    }
+    public Vector3 MoveDirection { get; private set; }
 
-    private void Move()
+    void Update()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-
-        Vector3 dir = new Vector3(h, 0, v).normalized;
-        EventBus.OnMoveInputChanged?.Invoke(dir.magnitude);
+        MoveDirection = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0)
+                        * new Vector3(h, 0, v).normalized;
     }
 }

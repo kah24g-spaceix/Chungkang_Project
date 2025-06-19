@@ -9,10 +9,6 @@ public class AnimationComponent : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetIdle(bool isIdle)
-    {
-        _animator.SetBool("Idle", isIdle);
-    }
     public void SetRun(bool isRunning)
     {
         _animator.SetBool("Run", isRunning);
