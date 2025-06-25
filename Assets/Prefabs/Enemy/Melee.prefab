@@ -368,10 +368,19 @@ PrefabInstance:
       addedObject: {fileID: 2332942287128646845}
     - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7259179178378151196}
+      addedObject: {fileID: 3996174829494267178}
     - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8490432528093186585}
+      addedObject: {fileID: 5808552052411313294}
+    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1306375232579676041}
+    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8147397000645623575}
+    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6395130998551977660}
   m_SourcePrefab: {fileID: 100100000, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
 --- !u!1 &3270120073872812357 stripped
 GameObject:
@@ -428,7 +437,29 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7259179178378151196
+--- !u!195 &3996174829494267178
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3270120073872812357}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 1.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &5808552052411313294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -442,7 +473,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
---- !u!114 &8490432528093186585
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1306375232579676041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3270120073872812357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 624a870c49836e54da4acae726775d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 2
+  runSpeed: 6
+  rotationSpeed: 120
+  stoppingDistance: 1.5
+--- !u!114 &8147397000645623575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3270120073872812357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65879cdbe167f1842bc87cd6b29174a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sightRange: 15
+  sightAngle: 60
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 192
+  hearingRange: 20
+--- !u!114 &6395130998551977660
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -454,5 +531,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5069768f8732e5747853444a3ebb3ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  moveSpeed: 3
+  initialState: 1
+  blackboard:
+    player: {fileID: 0}
+    lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+    canSeePlayer: 0
+    distanceToPlayer: 0
+    lastSeenPlayerTime: 0
+    health: 0
+    maxHealth: 0
+    isAlerted: 0
+    alertLevel: 0
+    patrolPoints: []
+    currentPatrolIndex: 0
+    currentDestination: {x: 0, y: 0, z: 0}
+    hasReachedDestination: 0
+    lastAttackTime: 0
+    isAttacking: 0
+    attackCooldown: 2
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  patrolWaitTime: 3
+  attackRange: 2
+  attackDamage: 10

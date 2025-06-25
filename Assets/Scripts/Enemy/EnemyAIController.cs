@@ -41,6 +41,7 @@ namespace EnemyAI
 
         void Start()
         {
+            blackboard.player = GameObject.FindGameObjectWithTag("Player").transform;
             stateMachine.Start(initialState);
         }
 
