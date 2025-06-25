@@ -4,11 +4,22 @@ using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
-    public Slider hpBar;
-    public Slider epBar;
-    public Slider expBar;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI moveSpeedText;
+    [Header("HP")]
+    [SerializeField] private Slider hpBar;
+    [SerializeField] private TextMeshProUGUI hpText;
+
+    [Header("EP")]
+    [SerializeField] private Slider epBar;
+    [SerializeField] private TextMeshProUGUI epText;
+
+    [Header("EXP")]
+    [SerializeField] private Slider expBar;
+    [SerializeField] private TextMeshProUGUI expText;
+
+    [Header("Stats")]
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI powerText;
+    [SerializeField] private TextMeshProUGUI moveSpeedText;
 
     private void Start()
     {
@@ -16,6 +27,7 @@ public class PlayerUI : MonoBehaviour
         EventBus.OnEpChanged += UpdateEP;
         EventBus.OnExpChanged += UpdateEXP;
         EventBus.OnLevelUp += UpdateLevel;
+        EventBus.OnAttackPowerChanged += UpdateAttackPower;
         EventBus.OnMoveSpeedChanged += UpdateMoveSpeed;
     }
 
@@ -25,6 +37,7 @@ public class PlayerUI : MonoBehaviour
         EventBus.OnEpChanged -= UpdateEP;
         EventBus.OnExpChanged -= UpdateEXP;
         EventBus.OnLevelUp -= UpdateLevel;
+        EventBus.OnAttackPowerChanged -= UpdateAttackPower;
         EventBus.OnMoveSpeedChanged -= UpdateMoveSpeed;
     }
 
@@ -32,23 +45,30 @@ public class PlayerUI : MonoBehaviour
     {
         hpBar.maxValue = max;
         hpBar.value = current;
+        hpText.SetText($"{current} / {max}");
     }
     private void UpdateEP(int current, int max)
     {
         epBar.maxValue = max;
         epBar.value = current;
+        epText.SetText($"{current} / {max}");
     }
     private void UpdateEXP(int current, int max)
     {
         expBar.maxValue = max;
         expBar.value = current;
+        expText.SetText($"{current} / {max}");
     }
     private void UpdateLevel(int level)
     {
         levelText.SetText($"LV {level}");
     }
+    private void UpdateAttackPower(int power)
+    {
+        powerText.SetText($"AP: {power}");
+    }
     private void UpdateMoveSpeed(float speed)
     {
-        moveSpeedText.SetText($"{speed:F1}");
+        moveSpeedText.SetText($"S: {speed:F1}");
     }
 }
