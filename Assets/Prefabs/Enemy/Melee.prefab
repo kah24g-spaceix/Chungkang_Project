@@ -348,6 +348,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: fa0e93207a1d5914091c18888d25e30f, type: 2}
+    - target: {fileID: 9500000, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 13700000, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -371,16 +375,7 @@ PrefabInstance:
       addedObject: {fileID: 3996174829494267178}
     - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5808552052411313294}
-    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1306375232579676041}
-    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8147397000645623575}
-    - targetCorrespondingSourceObject: {fileID: 100106, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6395130998551977660}
+      addedObject: {fileID: 2698400678362503478}
   m_SourcePrefab: {fileID: 100100000, guid: bdcb445628c57a3438ca6268d217b1a9, type: 3}
 --- !u!1 &3270120073872812357 stripped
 GameObject:
@@ -433,7 +428,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.22
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -451,7 +446,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -459,7 +454,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5808552052411313294
+--- !u!114 &2698400678362503478
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -468,91 +463,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3270120073872812357}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ced3299c443c62a4ea85ac37cb5798c2, type: 3}
+  m_Script: {fileID: 11500000, guid: a0a9b73e36802844cbed2117523caa63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1306375232579676041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3270120073872812357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 624a870c49836e54da4acae726775d35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 2
-  runSpeed: 6
-  rotationSpeed: 120
-  stoppingDistance: 1.5
---- !u!114 &8147397000645623575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3270120073872812357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65879cdbe167f1842bc87cd6b29174a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sightRange: 15
-  sightAngle: 60
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 192
-  hearingRange: 20
---- !u!114 &6395130998551977660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3270120073872812357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5069768f8732e5747853444a3ebb3ee3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialState: 1
-  blackboard:
-    player: {fileID: 0}
-    lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
-    canSeePlayer: 0
-    distanceToPlayer: 0
-    lastSeenPlayerTime: 0
-    health: 0
-    maxHealth: 0
-    isAlerted: 0
-    alertLevel: 0
-    patrolPoints: []
-    currentPatrolIndex: 0
-    currentDestination: {x: 0, y: 0, z: 0}
-    hasReachedDestination: 0
-    lastAttackTime: 0
-    isAttacking: 0
-    attackCooldown: 2
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  patrolWaitTime: 3
-  attackRange: 2
-  attackDamage: 10
+  config: {fileID: 11400000, guid: 2a18dbaedaf2ff940a480170e9f2b45c, type: 2}
+  patrolPoints: []
+  animationSpeedMultiplier: 1
+  speedSmoothingRate: 5
+  healthBarPrefab: {fileID: 3850623330992272075, guid: bd4c81f1ec674aa46951d5fc1d7683ed, type: 3}

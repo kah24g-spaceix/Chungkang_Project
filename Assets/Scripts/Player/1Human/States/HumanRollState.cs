@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class HumanRollState : IState
 {
-    private readonly HumanMovementComponent move;
-    private readonly HumanAnimationComponent anim;
-    private readonly HumanInputComponent input;
+    private readonly IPlayerMovement move;
+    private readonly IPlayerAnimation anim;
+    private readonly IPlayerInput input;
     private readonly StateMachine sm;
     private float elapsed;
     private readonly float rollDur = 0.5f;
-    public HumanRollState(HumanMovementComponent m, HumanAnimationComponent a, HumanInputComponent i, StateMachine s)
+
+    public HumanRollState(IPlayerMovement m, IPlayerAnimation a, IPlayerInput i, StateMachine s)
     {
-        move = m; anim = a; sm = s;
+        move = m; anim = a; input = i; sm = s;
     }
+
     public void Enter()
     {
         move.CanMove = false;
@@ -19,6 +21,7 @@ public class HumanRollState : IState
         anim.SetRoll(true);
         elapsed = 0f;
     }
+
     public void Execute(float dt)
     {
         elapsed += dt;
@@ -28,6 +31,7 @@ public class HumanRollState : IState
             sm.ChangeState(new HumanIdleState(move, anim, input, sm));
         }
     }
+
     public void Exit()
     {
         move.CanMove = true;

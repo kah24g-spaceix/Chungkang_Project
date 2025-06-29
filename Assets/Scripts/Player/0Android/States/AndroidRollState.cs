@@ -1,15 +1,17 @@
 public class AndroidRollState : IState
 {
-    private readonly AndroidMovementComponent move;
-    private readonly AndroidAnimationComponent anim;
-    private readonly AndroidInputComponent input;
+    private readonly IPlayerMovement move;
+    private readonly IPlayerAnimation anim;
+    private readonly IPlayerInput input;
     private readonly StateMachine sm;
     private float elapsed;
     private readonly float rollDur = 0.5f;
-    public AndroidRollState(AndroidMovementComponent m, AndroidAnimationComponent a, AndroidInputComponent i, StateMachine s)
+
+    public AndroidRollState(IPlayerMovement m, IPlayerAnimation a, IPlayerInput i, StateMachine s)
     {
         move = m; anim = a; sm = s; input = i;
     }
+
     public void Enter()
     {
         move.CanMove = false;
@@ -17,6 +19,7 @@ public class AndroidRollState : IState
         anim.SetRoll(true);
         elapsed = 0f;
     }
+
     public void Execute(float dt)
     {
         elapsed += dt;
@@ -26,6 +29,7 @@ public class AndroidRollState : IState
             sm.ChangeState(new AndroidIdleState(move, anim, input, sm));
         }
     }
+
     public void Exit()
     {
         move.CanMove = true;

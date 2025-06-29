@@ -380,7 +380,7 @@ MonoBehaviour:
   level: 1
   expToLevelUp: 100
   attackPower: 0
-  moveSpeed: 4
+  moveSpeed: 1.55
   epRecoveryRate: 5
 --- !u!114 &4077085643929064108
 MonoBehaviour:
@@ -412,7 +412,7 @@ MonoBehaviour:
   moveSpeed: 0
   rotateSpeed: 20
   rollSpeed: 5
-  CanMove: 1
+  canMove: 1
 --- !u!114 &6826068307066703996
 MonoBehaviour:
   m_ObjectHideFlags: 0

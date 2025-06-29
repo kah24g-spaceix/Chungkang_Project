@@ -443,7 +443,7 @@ MonoBehaviour:
   level: 1
   expToLevelUp: 100
   attackPower: 0
-  moveSpeed: 4
+  moveSpeed: 0.75
   epRecoveryRate: 5
 --- !u!114 &6728962557562416612
 MonoBehaviour:
@@ -474,7 +474,7 @@ MonoBehaviour:
   moveSpeed: 0
   rotateSpeed: 20
   rollSpeed: 5
-  CanMove: 1
+  canMove: 1
 --- !u!114 &6454317573623038847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,6 +641,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 10
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  debugMode: 1
+  damageDelay: 0.1
 --- !u!4 &4240563905367158466 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a095f798aba8f2946b3a23de742b2fb8, type: 3}

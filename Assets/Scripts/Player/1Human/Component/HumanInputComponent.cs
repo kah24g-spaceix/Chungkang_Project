@@ -1,10 +1,5 @@
-using UnityEngine;
-public class HumanInputComponent : MonoBehaviour
+public class HumanInputComponent : BasePlayerInput
 {
-    public Vector3 MoveDir { get; private set; }
-    private void Update()
-    {
-        MoveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        MoveDir = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * MoveDir;
-    }
+    // BasePlayerInput의 모든 기능을 상속받음
+    // 필요시 Human 특화 기능만 추가
 }

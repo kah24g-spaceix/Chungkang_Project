@@ -1,47 +1,32 @@
 using UnityEngine;
-public class AndroidPlayerController : MonoBehaviour
+
+public class AndroidPlayerController : BasePlayerController
 {
-    private AndroidMovementComponent move;
-    private AndroidAnimationComponent anim;
-    private AndroidInputComponent input;
-    private AndroidAttackComponent atk;
-    private StateMachine sm;
-
     private AndroidIdleState idleState;
-
-    private float currentRoll, currentAtk = 0.0f;
-    public float rollCooldown = 1f;
-    public float attackCooldown = 4f;
-    private void Awake()
+    
+    protected override void InitializeComponents()
     {
-        move = GetComponent<AndroidMovementComponent>();
-        anim = GetComponent<AndroidAnimationComponent>();
+        movement = GetComponent<AndroidMovementComponent>();
+        animation = GetComponent<AndroidAnimationComponent>();
         input = GetComponent<AndroidInputComponent>();
-        atk = GetComponent<AndroidAttackComponent>();
-        sm = new StateMachine();
-
-        idleState = new AndroidIdleState(move, anim, input, sm);
+        attack = GetComponent<AndroidAttackComponent>();
     }
-    private void Start()
+    
+    protected override void InitializeStates()
     {
-        sm.ChangeState(idleState);
+        idleState = new AndroidIdleState(movement, animation, input, stateMachine);
+        stateMachine.ChangeState(idleState);
     }
-    private void Update()
+    
+    protected override void PerformRoll()
     {
-        sm.Update(Time.deltaTime);
-        move.Move(input.MoveDir, Time.deltaTime);
-        if (currentRoll > 0f) currentRoll -= Time.deltaTime;
-        if (currentAtk > 0f) currentAtk -= Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && currentRoll <= 0f)
-        {
-            sm.ChangeState(new AndroidRollState(move, anim, input, sm));
-            currentRoll = rollCooldown;
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse0) && currentAtk <= 0f)
-        {
-            sm.ChangeState(new AndroidAttackState(move, anim, input, atk, sm));
-            currentAtk = attackCooldown;
-        }
+        stateMachine.ChangeState(new AndroidRollState(movement, animation, input, stateMachine));
+        lastRollTime = Time.time;
+    }
+    
+    protected override void PerformAttack()
+    {
+        stateMachine.ChangeState(new AndroidAttackState(movement, animation, input, attack, stateMachine));
+        lastAttackTime = Time.time;
     }
 }
