@@ -1,19 +1,31 @@
+using System.Collections.Generic;
+using UnityEngine;
 using BehaviorTree;
 
-public class CheckPlayerInRange : BehaviorNode
+public class CheckPlayerInRange : BlackboardTask
 {
-    private Blackboard blackboard;
-    
-    public CheckPlayerInRange(Blackboard blackboard)
+    public CheckPlayerInRange(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.DistanceToPlayer,
+            BlackboardKey.Config
+        };
     }
-    
+
     public override NodeState Evaluate()
     {
-        float distance = blackboard.GetValue<float>("distanceToPlayer");
-        EnemyConfig config = blackboard.GetValue<EnemyConfig>("config");
-        
+        if (!ValidateRequiredData())
+        {
+            state = NodeState.Failure;
+            return state;
+        }
+
+        float distance = blackboard.GetValue<float>(BlackboardKey.DistanceToPlayer);
+        var config = blackboard.GetValue<EnemyConfig>(BlackboardKey.Config);
+
         state = distance <= config.attackRange ? NodeState.Success : NodeState.Failure;
         return state;
     }

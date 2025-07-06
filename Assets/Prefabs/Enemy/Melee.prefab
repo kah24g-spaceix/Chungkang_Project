@@ -467,7 +467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: 2a18dbaedaf2ff940a480170e9f2b45c, type: 2}
-  patrolPoints: []
+  blackboardConfig: {fileID: 11400000, guid: 1c2b1f8161cffd945b820c26439aba4a, type: 2}
   animationSpeedMultiplier: 1
   speedSmoothingRate: 5
   healthBarPrefab: {fileID: 3850623330992272075, guid: bd4c81f1ec674aa46951d5fc1d7683ed, type: 3}

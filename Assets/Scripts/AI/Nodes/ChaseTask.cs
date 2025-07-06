@@ -1,43 +1,53 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using BehaviorTree;
 
-public class ChaseTask : BehaviorNode
+public class ChaseTask : BlackboardTask
 {
-    private Blackboard blackboard;
-    
-    public ChaseTask(Blackboard blackboard)
+    public ChaseTask(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Player,
+            BlackboardKey.Agent,
+            BlackboardKey.Config
+        };
     }
-    
+
+    public override List<BlackboardKey> GetOptionalKeys()
+    {
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Animator
+        };
+    }
+
     public override NodeState Evaluate()
     {
-        Transform player = blackboard.GetValue<Transform>("player");
-        NavMeshAgent agent = blackboard.GetValue<NavMeshAgent>("agent");
-        EnemyConfig config = blackboard.GetValue<EnemyConfig>("config");
-        Animator animator = blackboard.GetValue<Animator>("animator");
-        
-        if (player == null)
+        if (!ValidateRequiredData())
         {
             state = NodeState.Failure;
             return state;
         }
-        
-        // Update last known player position
-        blackboard.SetValue("lastKnownPlayerPosition", player.position);
-        
-        // Set chase speed and destination
+
+        var player = blackboard.GetValue<Transform>(BlackboardKey.Player);
+        var agent = blackboard.GetValue<NavMeshAgent>(BlackboardKey.Agent);
+        var config = blackboard.GetValue<EnemyConfig>(BlackboardKey.Config);
+        var animator = blackboard.GetValue<Animator>(BlackboardKey.Animator);
+
+        agent.isStopped = false;
         agent.speed = config.runSpeed;
         agent.SetDestination(player.position);
-        
-        // Update animation
+
         if (animator != null)
         {
-            animator.SetFloat("Speed", agent.velocity.magnitude);
+            animator.SetFloat("Speed", agent.desiredVelocity.magnitude);
             animator.SetBool("IsChasing", true);
         }
-        
+
         state = NodeState.Running;
         return state;
     }

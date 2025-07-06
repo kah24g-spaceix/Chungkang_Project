@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283ac89bb09830c48910547fb93dac3c, type: 3}
+  m_Name: DefaultWeapon
+  m_EditorClassIdentifier: 
+  weaponName: Enchanced
+  description: 1111
+  icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  baseDamage: 10
+  attackSpeed: 1
+  isHeavyWeapon: 1
+  weaponPrefab: {fileID: 9010942145679387343, guid: 05c53989b3b5c8848837dd6330f2e957, type: 3}
+  animatorController: {fileID: 0}
+  heavyDamageMultiplier: 1.5
+  heavyAttackRange: 1.2
+  weaponTrailColor: {r: 1, g: 0, b: 0, a: 1}

@@ -1,22 +1,41 @@
+using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 
-public class CheckLastKnownPosition : BehaviorNode
+public class CheckLastKnownPosition : BlackboardTask
 {
-    private Blackboard blackboard;
-    
-    public CheckLastKnownPosition(Blackboard blackboard)
+    public CheckLastKnownPosition(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.IsPlayerVisible,
+            BlackboardKey.LastKnownPlayerPosition
+        };
     }
-    
+
     public override NodeState Evaluate()
     {
-        bool isPlayerVisible = blackboard.GetValue<bool>("isPlayerVisible");
-        Vector3 lastKnownPosition = blackboard.GetValue<Vector3>("lastKnownPlayerPosition");
-        
-        // If we can't see player but have a last known position
-        state = !isPlayerVisible && lastKnownPosition != Vector3.zero ? NodeState.Success : NodeState.Failure;
+        if (!ValidateRequiredData())
+        {
+            state = NodeState.Failure;
+            return state;
+        }
+
+        bool isPlayerVisible = blackboard.GetValue<bool>(BlackboardKey.IsPlayerVisible);
+        Vector3 lastKnownPosition = blackboard.GetValue<Vector3>(BlackboardKey.LastKnownPlayerPosition);
+
+        if (!isPlayerVisible && lastKnownPosition != Vector3.zero)
+        {
+            Debug.Log($"[CheckLastKnownPosition] 마지막 위치 확인됨: {lastKnownPosition}");
+            state = NodeState.Success;
+        }
+        else
+        {
+            state = NodeState.Failure;
+        }
+
         return state;
     }
 }

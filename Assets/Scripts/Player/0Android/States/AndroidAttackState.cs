@@ -5,6 +5,7 @@ public class AndroidAttackState : IState
     private readonly IPlayerMovement move;
     private readonly IPlayerAnimation anim;
     private readonly IPlayerInput input;
+    private readonly IPlayerAttack attack;
     private readonly AndroidAttackComponent attackComponent;
     private readonly StateMachine sm;
 
@@ -18,56 +19,51 @@ public class AndroidAttackState : IState
         move = m;
         anim = a;
         input = i;
-        attackComponent = atkC as AndroidAttackComponent;
+        attack = atkC;
         sm = s;
+
+        attackComponent = atkC as AndroidAttackComponent;
+        if (attackComponent == null)
+        {
+            throw new System.ArgumentNullException(nameof(attackComponent), "AttackComponent must be AndroidAttackComponent");
+        }
     }
 
     public void Enter()
     {
-        // 공격은 AndroidAttackComponent에서 자체적으로 관리
+        Debug.Log("AndroidAttackState Enter - Starting Attack");
+
+        attackComponent.Attack();
+        Debug.Log("Attack initiated from AndroidAttackState");
     }
 
     public void Execute(float dt)
     {
         HandleAttackInput();
-        HandleRestrictedMovement(dt);
-        
+
         if (!attackComponent.IsAttacking)
         {
-            sm.ChangeState(new AndroidIdleState(move, anim, input, sm));
+            Debug.Log("Attack finished, returning to Idle");
+            sm.ChangeState(new AndroidIdleState(move, anim, input, attack, sm));
         }
     }
 
     public void Exit()
     {
-        // Exit 시 특별한 처리 없음
+        Debug.Log("AndroidAttackState Exit");
     }
-    
+
     private void HandleAttackInput()
     {
-        // 일반 공격 입력 (콤보)
         if (input.IsAttackPressed)
         {
+            Debug.Log($"Attack input in state - CanCombo: {attackComponent.CanCombo}");
+
             if (attackComponent.CanCombo)
             {
-                // 인수 없이 호출 (수정됨)
                 attackComponent.TryComboAttack();
                 Debug.Log("Combo attack triggered");
             }
-        }
-    }
-    
-    private void HandleRestrictedMovement(float dt)
-    {
-        // 제한된 움직임 허용
-        if (input.MoveDir.magnitude > 0.1f)
-        {
-            move.Move(input.MoveDir, dt);
-            anim.SetRun(true);
-        }
-        else
-        {
-            anim.SetRun(false);
         }
     }
 }

@@ -1,65 +1,67 @@
 using UnityEngine;
-
 public abstract class BasePlayerController : MonoBehaviour
 {
     protected IPlayerMovement movement;
-    protected IPlayerAnimation animation;
+    protected new IPlayerAnimation animation;
     protected IPlayerInput input;
     protected IPlayerAttack attack;
     protected StateMachine stateMachine;
-    
+
     [Header("Cooldowns")]
-    public float rollCooldown = 1f;
+    public float dodgeCooldown = 1f;
     public float attackCooldown = 1f;
-    
-    protected float lastRollTime;
+
+    protected float lastDodgeTime;
     protected float lastAttackTime;
-    
+
     protected virtual void Awake()
     {
         InitializeComponents();
         stateMachine = new StateMachine();
     }
-    
+
     protected abstract void InitializeComponents();
     protected abstract void InitializeStates();
-    
+
     protected virtual void Start()
     {
         InitializeStates();
     }
-    
+
     protected virtual void Update()
     {
         stateMachine.Update(Time.deltaTime);
         movement.Move(input.MoveDir, Time.deltaTime);
-        
-        HandleInput();
+        ProcessDodge();
+        ProcessAttack();
     }
-    
-    protected virtual void HandleInput()
+
+    private void ProcessDodge()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && CanRoll())
-        {
-            PerformRoll();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Mouse0) && CanAttack())
-        {
+        if (input.IsDodgePressed && CanDodge())
+            PerformDodge();
+    }
+
+    private void ProcessAttack()
+    {
+        if (!input.IsAttackPressed) return;
+
+        if (CanAttack())
             PerformAttack();
-        }
+        else
+            Debug.Log("공격 쿨다운 중...");
     }
-    
-    protected virtual bool CanRoll()
+
+    protected virtual bool CanDodge()
     {
-        return Time.time >= lastRollTime + rollCooldown;
+        return Time.time >= lastDodgeTime + dodgeCooldown;
     }
-    
+
     protected virtual bool CanAttack()
     {
         return Time.time >= lastAttackTime + attackCooldown;
     }
-    
-    protected abstract void PerformRoll();
+
+    protected abstract void PerformDodge();
     protected abstract void PerformAttack();
 }

@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d984582b2fbae4287347a60cfcc6fb, type: 3}
+  m_Name: BlackboardConfig
+  m_EditorClassIdentifier: 
+  entries:
+  - key: 0
+    description: 
+    isRequired: 1
+    entryType: 0
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}
+  - key: 1
+    description: 
+    isRequired: 1
+    entryType: 1
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}
+  - key: 2
+    description: 
+    isRequired: 1
+    entryType: 3
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}
+  - key: 2
+    description: 
+    isRequired: 1
+    entryType: 3
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}
+  - key: 23
+    description: 
+    isRequired: 0
+    entryType: 7
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}
+  - key: 23
+    description: 
+    isRequired: 0
+    entryType: 7
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    vectorValue: {x: 0, y: 0, z: 0}

@@ -1,20 +1,35 @@
+using System.Collections.Generic;
+using UnityEngine;
 using BehaviorTree;
 
-public class CheckHealthLow : BehaviorNode
+public class CheckHealthLow : BlackboardTask
 {
-    private Blackboard blackboard;
-    
-    public CheckHealthLow(Blackboard blackboard)
+    public CheckHealthLow(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Config,
+            BlackboardKey.HealthPercentage
+        };
     }
-    
+
     public override NodeState Evaluate()
     {
-        float healthPercentage = blackboard.GetValue<float>("healthPercentage");
-        EnemyConfig config = blackboard.GetValue<EnemyConfig>("config");
-        
-        state = healthPercentage <= config.fleeHealthPercentage ? NodeState.Success : NodeState.Failure;
+        if (!ValidateRequiredData())
+        {
+            state = NodeState.Failure;
+            return state;
+        }
+
+        var config = blackboard.GetValue<EnemyConfig>(BlackboardKey.Config);
+        float healthPercentage = blackboard.GetValue<float>(BlackboardKey.HealthPercentage);
+
+        state = healthPercentage <= config.fleeHealthPercentage
+            ? NodeState.Success
+            : NodeState.Failure;
+
         return state;
     }
 }

@@ -15,19 +15,20 @@ public class HumanPlayerController : BasePlayerController
     
     protected override void InitializeStates()
     {
+        // animation 변수 사용 (IPlayerAnimation 인터페이스)
         idleState = new HumanIdleState(movement, animation, input, stateMachine);
         stateMachine.ChangeState(idleState);
     }
     
-    protected override void PerformRoll()
-    {
-        stateMachine.ChangeState(new HumanRollState(movement, animation, input, stateMachine));
-        lastRollTime = Time.time;
-    }
-    
     protected override void PerformAttack()
     {
+        // animation 변수 사용 (IPlayerAnimation 인터페이스)
         stateMachine.ChangeState(new HumanAttackState(movement, animation, attack, stateMachine, attackDuration));
         lastAttackTime = Time.time;
+    }
+
+    protected override void PerformDodge()
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -1,17 +1,27 @@
+using System.Collections.Generic;
 using BehaviorTree;
 
-public class CheckPlayerVisible : BehaviorNode
+public class CheckPlayerVisible : BlackboardTask
 {
-    private Blackboard blackboard;
-    
-    public CheckPlayerVisible(Blackboard blackboard)
+    public CheckPlayerVisible(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.IsPlayerVisible
+        };
     }
-    
+
     public override NodeState Evaluate()
     {
-        bool isVisible = blackboard.GetValue<bool>("isPlayerVisible");
+        if (!ValidateRequiredData())
+        {
+            state = NodeState.Failure;
+            return state;
+        }
+
+        bool isVisible = blackboard.GetValue<bool>(BlackboardKey.IsPlayerVisible);
         state = isVisible ? NodeState.Success : NodeState.Failure;
         return state;
     }

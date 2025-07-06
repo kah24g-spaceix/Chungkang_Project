@@ -1,76 +1,106 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using BehaviorTree;
 
-public class InvestigateTask : BehaviorNode
+public class InvestigateTask : BlackboardTask
 {
-    private Blackboard blackboard;
-    private float investigateTimer = 0f;
-    private bool hasReachedPosition = false;
-    
-    public InvestigateTask(Blackboard blackboard)
+    public InvestigateTask(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.LastKnownPlayerPosition,
+            BlackboardKey.Agent,
+            BlackboardKey.Config,
+            BlackboardKey.Transform
+        };
     }
-    
+
+    public override List<BlackboardKey> GetOptionalKeys()
+    {
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Animator
+        };
+    }
+
+    public override void InitializeBlackboardData(Blackboard blackboard)
+    {
+        if (!blackboard.HasValue(BlackboardKey.HasReachedPosition))
+            blackboard.SetValue(BlackboardKey.HasReachedPosition, false);
+        
+        if (!blackboard.HasValue(BlackboardKey.InvestigateTimer))
+            blackboard.SetValue(BlackboardKey.InvestigateTimer, 0f);
+    }
+
     public override NodeState Evaluate()
     {
-        Vector3 lastKnownPosition = blackboard.GetValue<Vector3>("lastKnownPlayerPosition");
-        NavMeshAgent agent = blackboard.GetValue<NavMeshAgent>("agent");
-        EnemyConfig config = blackboard.GetValue<EnemyConfig>("config");
-        Transform transform = blackboard.GetValue<Transform>("transform");
-        Animator animator = blackboard.GetValue<Animator>("animator");
-        
-        if (lastKnownPosition == Vector3.zero)
+        if (!ValidateRequiredData())
         {
             state = NodeState.Failure;
             return state;
         }
-        
-        // 수색 상태로 변경 (시야 확장 유지)
-        blackboard.SetValue("sightState", SightState.Investigating);
-        
-        if (!hasReachedPosition)
+
+        var lastKnownPos = blackboard.GetValue<Vector3>(BlackboardKey.LastKnownPlayerPosition);
+        var agent = blackboard.GetValue<NavMeshAgent>(BlackboardKey.Agent);
+        var config = blackboard.GetValue<EnemyConfig>(BlackboardKey.Config);
+        var transform = blackboard.GetValue<Transform>(BlackboardKey.Transform);
+        var animator = blackboard.GetValue<Animator>(BlackboardKey.Animator);
+
+        if (lastKnownPos == Vector3.zero)
         {
+            state = NodeState.Failure;
+            return state;
+        }
+
+        blackboard.SetValue(BlackboardKey.SightState, SightState.Investigating);
+
+        bool hasReached = blackboard.GetValue<bool>(BlackboardKey.HasReachedPosition);
+        float timer = blackboard.GetValue<float>(BlackboardKey.InvestigateTimer);
+
+        if (!hasReached)
+        {
+            agent.isStopped = false;
             agent.speed = config.walkSpeed;
-            agent.SetDestination(lastKnownPosition);
-            
+            agent.SetDestination(lastKnownPos);
+
             if (animator != null)
             {
-                animator.SetFloat("Speed", agent.velocity.magnitude);
+                animator.SetFloat("Speed", agent.desiredVelocity.magnitude);
                 animator.SetBool("IsInvestigating", true);
             }
-            
-            if (!agent.pathPending && agent.remainingDistance < 1f)
+
+            if (!agent.pathPending && agent.remainingDistance < config.investigationArrivalDistance)
             {
-                hasReachedPosition = true;
-                investigateTimer = 0f;
+                blackboard.SetValue(BlackboardKey.HasReachedPosition, true);
+                blackboard.SetValue(BlackboardKey.InvestigateTimer, 0f);
+                agent.isStopped = true;
             }
         }
         else
         {
-            investigateTimer += Time.deltaTime;
-            
-            // 주변을 둘러보며 수색
-            float rotationSpeed = config.investigationRotationSpeed;
-            transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
-            
-            if (investigateTimer >= config.investigationTime)
+            timer += Time.deltaTime;
+            blackboard.SetValue(BlackboardKey.InvestigateTimer, timer);
+
+            float rotSpeed = config.investigationRotationSpeed;
+            transform.Rotate(0f, rotSpeed * Time.deltaTime, 0f);
+
+            if (timer >= config.investigationTime)
             {
-                // 수색 완료 - 마지막 위치 초기화
-                blackboard.SetValue("lastKnownPlayerPosition", Vector3.zero);
-                hasReachedPosition = false;
-                
+                blackboard.SetValue(BlackboardKey.LastKnownPlayerPosition, Vector3.zero);
+                blackboard.SetValue(BlackboardKey.HasReachedPosition, false);
+                blackboard.SetValue(BlackboardKey.InvestigateTimer, 0f);
+
                 if (animator != null)
-                {
                     animator.SetBool("IsInvestigating", false);
-                }
-                
+
                 state = NodeState.Success;
                 return state;
             }
         }
-        
+
         state = NodeState.Running;
         return state;
     }

@@ -1,71 +1,91 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using BehaviorTree;
 
-public class FleeTask : BehaviorNode
+public class FleeTask : BlackboardTask
 {
-    private Blackboard blackboard;
-    private Vector3 fleeTarget;
-    private bool hasFleeTarget = false;
-    
-    public FleeTask(Blackboard blackboard)
+    public FleeTask(Blackboard blackboard) : base(blackboard) { }
+
+    public override List<BlackboardKey> GetRequiredKeys()
     {
-        this.blackboard = blackboard;
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Player,
+            BlackboardKey.Transform,
+            BlackboardKey.Agent,
+            BlackboardKey.Config
+        };
     }
-    
+
+    public override List<BlackboardKey> GetOptionalKeys()
+    {
+        return new List<BlackboardKey>
+        {
+            BlackboardKey.Animator
+        };
+    }
+
+    public override void InitializeBlackboardData(Blackboard blackboard)
+    {
+        if (!blackboard.HasValue(BlackboardKey.HasFleeTarget))
+            blackboard.SetValue(BlackboardKey.HasFleeTarget, false);
+        
+        if (!blackboard.HasValue(BlackboardKey.FleeTarget))
+            blackboard.SetValue(BlackboardKey.FleeTarget, Vector3.zero);
+    }
+
     public override NodeState Evaluate()
     {
-        Transform player = blackboard.GetValue<Transform>("player");
-        Transform transform = blackboard.GetValue<Transform>("transform");
-        NavMeshAgent agent = blackboard.GetValue<NavMeshAgent>("agent");
-        EnemyConfig config = blackboard.GetValue<EnemyConfig>("config");
-        Animator animator = blackboard.GetValue<Animator>("animator");
-        
-        if (player == null)
+        if (!ValidateRequiredData())
         {
             state = NodeState.Failure;
             return state;
         }
-        
-        if (!hasFleeTarget)
+
+        var player = blackboard.GetValue<Transform>(BlackboardKey.Player);
+        var self = blackboard.GetValue<Transform>(BlackboardKey.Transform);
+        var agent = blackboard.GetValue<NavMeshAgent>(BlackboardKey.Agent);
+        var config = blackboard.GetValue<EnemyConfig>(BlackboardKey.Config);
+        var animator = blackboard.GetValue<Animator>(BlackboardKey.Animator);
+
+        Vector3 selfPos = self.position;
+        bool hasFlee = blackboard.GetValue<bool>(BlackboardKey.HasFleeTarget);
+        Vector3 target = blackboard.GetValue<Vector3>(BlackboardKey.FleeTarget);
+
+        if (!hasFlee)
         {
-            // Calculate flee direction (opposite from player)
-            Vector3 fleeDirection = (transform.position - player.position).normalized;
-            fleeTarget = transform.position + fleeDirection * 10f; // Flee 10 units away
+            Vector3 dir = (selfPos - player.position).normalized;
+            Vector3 desired = selfPos + dir * config.fleeDistance;
             
-            // Make sure flee target is on navmesh
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(fleeTarget, out hit, 10f, NavMesh.AllAreas))
-            {
-                fleeTarget = hit.position;
-            }
-            
-            hasFleeTarget = true;
+            if (NavMesh.SamplePosition(desired, out NavMeshHit hit, config.fleeSampleRadius, NavMesh.AllAreas))
+                target = hit.position;
+            else
+                target = desired;
+
+            blackboard.SetValue(BlackboardKey.FleeTarget, target);
+            blackboard.SetValue(BlackboardKey.HasFleeTarget, true);
         }
-        
-        // Move towards flee target
+
         agent.speed = config.runSpeed;
-        agent.SetDestination(fleeTarget);
-        
-        // Update animation
+        agent.SetDestination(target);
+
         if (animator != null)
         {
-            animator.SetFloat("Speed", agent.velocity.magnitude);
+            animator.SetFloat("Speed", agent.desiredVelocity.magnitude);
             animator.SetBool("IsFleeing", true);
         }
-        
-        // Check if reached flee target
-        if (!agent.pathPending && agent.remainingDistance < 1f)
+
+        if (!agent.pathPending && agent.remainingDistance <= config.fleeStopDistance)
         {
-            hasFleeTarget = false;
+            blackboard.SetValue(BlackboardKey.HasFleeTarget, false);
             if (animator != null)
-            {
                 animator.SetBool("IsFleeing", false);
-            }
+            
             state = NodeState.Success;
             return state;
         }
-        
+
         state = NodeState.Running;
         return state;
     }
